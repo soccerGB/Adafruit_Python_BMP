@@ -162,10 +162,3 @@ class BMP280(object):
         p0 = pressure / pow(1.0 - altitude_m / 44330.0, 5.255)
         self._logger.debug('Sealevel pressure {0} Pa'.format(p0))
         return p0
-
-
-sensor = BMP280()
-print 'Temp = {0:0.2f} *C'.format(sensor.read_temperature())
-print 'Pressure = {0:0.2f} Pa'.format(sensor.read_pressure())
-print 'Altitude = {0:0.2f} m'.format(sensor.read_altitude())
-print 'Sealevel Pressure = {0:0.2f} Pa'.format(sensor.read_sealevel_pressure())
