@@ -126,12 +126,13 @@ class BMP280(object):
 
     def read_pressure(self):
         """Gets the compensated pressure in Pascals."""
-        raw_temp = self.read_raw(BMP280_PRESSUREDATA)
+        raw_temp = self.read_raw(BMP280_TEMPDATA)
         compensated_temp = self._compensate_temp(raw_temp)
+        raw_pressure = self.read_raw(BMP280_PRESSUREDATA)
 
         p1 = compensated_temp - 128000
         p2 = p1 * p1 * self.cal_p6
-        p2 += (p1 * self.cal_p6) << 17
+        p2 += (p1 * self.cal_p5) << 17
         p2 += self.cal_p4 << 35
         p1 = ((p1 * p1 * self.cal_p3) >> 8) + ((p1 * self.cal_p2) << 12)
         p1 = ((1 << 47) + p1) * (self.cal_p1) >> 33
@@ -139,7 +140,7 @@ class BMP280(object):
         if 0 == p1:
             return 0
 
-        p = 1048576 - raw_temp
+        p = 1048576 - raw_pressure
         p = (((p << 31) - p2) * 3125) / p1
         p1 = (self.cal_p9 * (p >> 13) * (p >> 13)) >> 25
         p2 = (self.cal_p8 * p) >> 19
